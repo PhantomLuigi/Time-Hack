@@ -25,10 +25,9 @@ def start_timer():
     start_time = time.time()
     return start_time
 
-
 # Display stats for 3 seconds
 def display_stats(luck, skill, money, team, security, risk):
-    print("\nStats Variables:")
+    print("\nGenerated Stats:")
     print(f"Luck: {luck}")
     print(f"Skill: {skill}")
     print(f"Money: {money}")
@@ -45,7 +44,7 @@ def convert_to_percentages(luck, skill, team, security, risk):
     skill_percentage = (skill / max_values['skill']) * 100
     team_percentage = (team / max_values['team']) * 100
     security_percentage = (security / max_values['security']) * 100
-    risk_percentage = (risk / max_values['risk']) * 100
+    risk_percentage = (max_values['risk'] / risk) * 100
 
     return luck_percentage, skill_percentage, team_percentage, security_percentage, risk_percentage
 
@@ -82,7 +81,7 @@ def upgrade(security, max_security):
     return new_security
 
 # Hack option
-def hack(luck_percent, skill_percent, team_percent, security_percent, risk_percent, current_level, total_levels):
+def hack(luck_percent, skill_percent, team_percent, security_percent, risk_percent, current_level, risk, security):
     skill_check = random.randint(1, 100)
 
     max_values_sum = luck_percent + skill_percent + team_percent + security_percent + risk_percent
@@ -103,7 +102,9 @@ def hack(luck_percent, skill_percent, team_percent, security_percent, risk_perce
             print("Hack successful! Level increased by 1.")
             return current_level + 1, 1  # Increment level by 1 and return 1 as the hack was successful
     else:
-        print("Hack failed! Risk increased by 60, Security decreased by 3.")
+        print("Hack failed! Risk increased by 500, Security decreased by 300.")
+        risk = risk + 500
+        security = security - 300
         return current_level, 0  # Return 0 as the hack was unsuccessful
 
 # Main function
@@ -129,7 +130,8 @@ def main():
     # Repeat levels until completed
     current_level = 1
     while current_level <= total_levels:
-        print(f"\nLevel {current_level} of {total_levels}")
+        if current_level <= total_levels:
+            print(f"\nLevel {current_level} of {total_levels}")
 
         # User options
         choice = user_options()
@@ -140,7 +142,8 @@ def main():
                 luck_percent, skill_percent, team_percent, security_percent, risk_percent, current_level, total_levels
             )
             if hack_success:
-                print(f"Level {current_level} of {total_levels}")
+                if current_level <= total_levels:
+                    print(f"Level {current_level} of {total_levels}")
             else:
                 print(f"Current Level: {current_level}")
         elif choice == '2':
